@@ -1,9 +1,14 @@
-﻿namespace Livraria;
+﻿using Livraria.Services;
 
-class Program
+namespace Livraria
 {
-    static void Main(string[] args)
+    class Program
     {
-        Console.WriteLine("Hello, World!");
+        static void Main(string[] args)
+        {
+            MenuService menuService = new MenuService();
+
+            menuService.ExibirMenu();
+        }
     }
 }
