@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Livraria.Utils;
 
 namespace Livraria.Services
@@ -10,135 +11,107 @@ namespace Livraria.Services
         public void ExibirMenu()
         {
             bool run = true;
-            string nome = string.Empty;
-            int preco = 0;
-            string genero = string.Empty;
-            int quantidade = 0;
-            string autor = string.Empty;
+
+            var menuActions = new Dictionary<string, Action>
+            {
+                { "1", CadastrarProduto },
+                { "2", ListarProdutos },
+                { "3", RemoverProduto },
+                { "4", AdicionarEstoque },
+                { "5", RetirarEstoque },
+                { "0", SairDoSistema }
+            };
 
             while (run)
             {
                 ConsoleHelper.ExibirOpcoesMenu();
+                string response = Console.ReadLine() ?? string.Empty;
 
-                string? response = Console.ReadLine();
-
-                switch (response)
+                if (menuActions.ContainsKey(response))
                 {
-                    case null:
-                        Console.WriteLine("Opção inválida! Tente novamente."); 
-                    break;
-
-                    case "1":
-                        Console.Write("Digite o nome do produto: ");
-                        string consoleName = Console.ReadLine();
-
-                        if (!ValidationHelper.IsString(consoleName)){
-                            Console.WriteLine("Nome inválido. Tente novamente.");
-                            continue;
-                        }
-
-                        nome = consoleName;
-
-                        Console.Write("Informe o preço: ");
-                        string consoleValue = Console.ReadLine();
-
-                        if (!ValidationHelper.IsNumeric(consoleValue)){
-                            Console.WriteLine("Valor inválido. Tente novamente.");
-                            continue;
-                        }
-
-                        preco = int.Parse(consoleValue);
-
-                        Console.Write("Informe o gênero: ");
-                        string consoleGender = Console.ReadLine();
-
-                        if (!ValidationHelper.IsString(consoleGender)){
-                            Console.WriteLine("Nome inválido. Tente novamente.");
-                            continue;
-                        }
-                        genero = consoleGender;
-
-                        Console.Write("Informe o nome do autor: ");
-                        string consoleAutor = Console.ReadLine();
-
-                        if (!ValidationHelper.IsString(consoleAutor)){
-                            Console.WriteLine("Valor inválido. Tente novamente.");
-                            continue;
-                        }
-
-                        autor = consoleAutor;
-
-                        estoqueService.Store(nome, preco, genero, quantidade, autor);
-                    break;
-
-                    case "2":
-                        estoqueService.Index();
-                    break;
-
-                    case "3":
-                        Console.Write("Digite o ID do produto: ");
-                        string idProduto = Console.ReadLine();
-
-                        if (!ValidationHelper.IsNumeric(idProduto)){
-                            Console.WriteLine("Valor inválido. Tente novamente.");
-                            continue;
-                        }
-
-                        estoqueService.RemoverProduto(int.Parse(idProduto));
-
-                    break;
-
-                    case "4":
-                        Console.Write("Digite o ID do produto:");
-                        string idEntrada = Console.ReadLine();
-
-                        if (!ValidationHelper.IsNumeric(idEntrada)){
-                            Console.WriteLine("Valor inválido. Tente novamente.");
-                            continue;
-                        }
-
-                        Console.Write("Digite a quantidade: ");
-                        string QtdEntrada = Console.ReadLine();
-
-                        if (!ValidationHelper.IsNumeric(QtdEntrada)){
-                            Console.WriteLine("Valor inválido. Tente novamente.");
-                            continue;
-                        }
-
-                        estoqueService.EntradaEstoque(int.Parse(idEntrada), int.Parse(QtdEntrada));
-
-                    break;
-
-                    case "5":
-                        Console.Write("Digite o ID do produto: ");
-                        string idSaida = Console.ReadLine();
-
-                        if (!ValidationHelper.IsNumeric(idSaida)){
-                            Console.WriteLine("Valor inválido. Tente novamente.");
-                            continue;
-                        }
-
-                        Console.Write("Digite o ID do produto: ");
-                        string QtdSaida = Console.ReadLine();
-
-                        if (!ValidationHelper.IsNumeric(QtdSaida)){
-                            Console.WriteLine("Valor inválido. Tente novamente.");
-                            continue;
-                        }
-
-                        estoqueService.SaidaEstoque(int.Parse(idSaida), int.Parse(QtdSaida));
-                    break;
-
-                    case "0":
-                        run = false;
-                        Console.WriteLine("Saindo do sistema...");
-                    break;
-
-                    default:
-                        Console.WriteLine("Opção inválida! Tente novamente.");
-                    break;
+                    menuActions[response]();
+                }
+                else
+                {
+                    Console.WriteLine("Opção inválida! Tente novamente.");
                 }
             }
+        }
+
+        private void CadastrarProduto()
+        {
+            string nome = LerEntradaTexto("Digite o nome do produto: ");
+            int preco = LerEntradaInteiro("Informe o preço: ");
+            string genero = LerEntradaTexto("Informe o gênero: ");
+            string autor = LerEntradaTexto("Informe o nome do autor: ");
+
+            estoqueService.AdicionarProduto(nome, preco, genero, quantidade: 0, autor);
+            Console.WriteLine("Produto cadastrado com sucesso!");
+        }
+
+        private void ListarProdutos()
+        {
+            estoqueService.ListarProdutos();
+        }
+
+        private void RemoverProduto()
+        {
+            int id = LerEntradaInteiro("Digite o ID do produto: ");
+            estoqueService.RemoverProduto(id);
+            Console.WriteLine("Produto removido com sucesso!");
+        }
+
+        private void AdicionarEstoque()
+        {
+            int id = LerEntradaInteiro("Digite o ID do produto: ");
+            int quantidade = LerEntradaInteiro("Digite a quantidade: ");
+            estoqueService.EntradaEstoque(id, quantidade);
+            Console.WriteLine("Estoque atualizado com sucesso!");
+        }
+
+        private void RetirarEstoque()
+        {
+            int id = LerEntradaInteiro("Digite o ID do produto: ");
+            int quantidade = LerEntradaInteiro("Digite a quantidade: ");
+            estoqueService.SaidaEstoque(id, quantidade);
+            Console.WriteLine("Saída de estoque registrada com sucesso!");
+        }
+
+        private void SairDoSistema()
+        {
+            Console.WriteLine("Saindo do sistema...");
+            Environment.Exit(0);
+        }
+
+        private string LerEntradaTexto(string mensagem)
+        {
+            Console.Write(mensagem);
+            string? input = Console.ReadLine();
+
+            while (!ValidationHelper.IsString(input))
+            {
+                Console.WriteLine("Entrada inválida. Tente novamente.");
+                Console.Write(mensagem);
+                input = Console.ReadLine();
+            }
+
+            return input!;
+        }
+
+        private int LerEntradaInteiro(string mensagem)
+        {
+            Console.Write(mensagem);
+            string? input = Console.ReadLine();
+            int result;
+
+            while (!int.TryParse(input, out result))
+            {
+                Console.WriteLine("Entrada inválida. Digite um número válido.");
+                Console.Write(mensagem);
+                input = Console.ReadLine();
+            }
+
+            return result;
         }
     }
 }

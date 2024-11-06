@@ -10,7 +10,7 @@ namespace Livraria.Services
 
         private int nextId = 1;
 
-        public void Store(string nome, int preco, string genero, int quantidade, string autor)
+        public void AdicionarProduto(string nome, int preco, string genero, int quantidade, string autor)
         {
             Livro livro = new Livro(nextId++, nome, preco, genero, quantidade, autor);
 
@@ -57,7 +57,7 @@ namespace Livraria.Services
             }
         }
 
-        public void Index()
+        public void ListarProdutos()
         {
             if (livros.Count == 0){
                 Console.WriteLine("Nenhum produto cadastrado.");
