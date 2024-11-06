@@ -9,7 +9,6 @@ namespace Livraria.Utils
 
         public static bool IsString(string value)
         {
-
             return !string.IsNullOrWhiteSpace(value) || !string.IsNullOrEmpty(value);
         }
     }
