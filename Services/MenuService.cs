@@ -8,12 +8,10 @@ namespace Livraria.Services
     {
         private EstoqueService estoqueService = new EstoqueService();
 
-        public void ExibirMenu()
-        {
+        public void ExibirMenu(){
             bool run = true;
 
-            var menuActions = new Dictionary<string, Action>
-            {
+            var menuActions = new Dictionary<string, Action>{
                 { "1", CadastrarProduto },
                 { "2", ListarProdutos },
                 { "3", RemoverProduto },
@@ -27,12 +25,10 @@ namespace Livraria.Services
                 ConsoleHelper.ExibirOpcoesMenu();
                 string response = Console.ReadLine() ?? string.Empty;
 
-                if (menuActions.ContainsKey(response))
-                {
+                if (menuActions.ContainsKey(response)){
                     menuActions[response]();
                 }
-                else
-                {
+                else{
                     Console.WriteLine("Opção inválida! Tente novamente.");
                 }
             }
@@ -41,21 +37,20 @@ namespace Livraria.Services
         private void CadastrarProduto()
         {
             string nome = LerEntradaTexto("Digite o nome do produto: ");
-            int preco = LerEntradaInteiro("Informe o preço: ");
+            double preco = LerEntradaDecimal("Informe o preço: ");
             string genero = LerEntradaTexto("Informe o gênero: ");
+            int paginas = LerEntradaInteiro("Informe o número de páginas: ");
             string autor = LerEntradaTexto("Informe o nome do autor: ");
 
-            estoqueService.AdicionarProduto(nome, preco, genero, quantidade: 0, autor);
+            estoqueService.AdicionarProduto(nome, preco, genero, 0, paginas, autor);
             Console.WriteLine("Produto cadastrado com sucesso!");
         }
 
-        private void ListarProdutos()
-        {
+        private void ListarProdutos(){
             estoqueService.ListarProdutos();
         }
 
-        private void RemoverProduto()
-        {
+        private void RemoverProduto(){
             int id = LerEntradaInteiro("Digite o ID do produto: ");
             estoqueService.RemoverProduto(id);
             Console.WriteLine("Produto removido com sucesso!");
@@ -79,7 +74,6 @@ namespace Livraria.Services
 
         private void SairDoSistema()
         {
-            Console.WriteLine("Saindo do sistema...");
             Environment.Exit(0);
         }
 
@@ -96,6 +90,22 @@ namespace Livraria.Services
             }
 
             return input!;
+        }
+
+        private double LerEntradaDecimal(string mensagem)
+        {
+            Console.Write(mensagem);
+            string? input = Console.ReadLine();
+            double result;
+
+            while (!double.TryParse(input, out result))
+            {
+                Console.WriteLine("Entrada inválida. Digite um número válido.");
+                Console.Write(mensagem);
+                input = Console.ReadLine();
+            }
+
+            return result;
         }
 
         private int LerEntradaInteiro(string mensagem)

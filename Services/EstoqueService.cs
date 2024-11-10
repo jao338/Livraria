@@ -10,9 +10,8 @@ namespace Livraria.Services
 
         private int nextId = 1;
 
-        public void AdicionarProduto(string nome, int preco, string genero, int quantidade, string autor)
-        {
-            Livro livro = new Livro(nextId++, nome, preco, genero, quantidade, autor);
+        public void AdicionarProduto(string nome, double preco, string genero, int quantidade, int paginas, string autor){
+            Livro livro = new Livro(nextId++, nome, preco, genero, quantidade, paginas, autor);
 
             livros.Add(livro);
 
