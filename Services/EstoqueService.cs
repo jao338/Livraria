@@ -14,8 +14,6 @@ namespace Livraria.Services
             Livro livro = new Livro(nextId++, nome, preco, genero, quantidade, paginas, autor);
 
             livros.Add(livro);
-
-            Console.WriteLine("Produto adicionado com sucesso!");
         }
 
         public void RemoverProduto(int id)
@@ -34,7 +32,7 @@ namespace Livraria.Services
         public void SaidaEstoque(int id, int quantidade){
             Livro livro = livros.Find(p => p.Id == id);
             if (livro != null){
-                if (livro.Quantidade >= quantidade){
+                if (livro.Quantidade > quantidade){
                     livro.Quantidade -= quantidade;
                     Console.WriteLine("Saída no estoque realizada com sucesso!");
                 }else{

@@ -61,7 +61,6 @@ namespace Livraria.Services
             int id = LerEntradaInteiro("Digite o ID do produto: ");
             int quantidade = LerEntradaInteiro("Digite a quantidade: ");
             estoqueService.EntradaEstoque(id, quantidade);
-            Console.WriteLine("Estoque atualizado com sucesso!");
         }
 
         private void RetirarEstoque()
@@ -69,7 +68,6 @@ namespace Livraria.Services
             int id = LerEntradaInteiro("Digite o ID do produto: ");
             int quantidade = LerEntradaInteiro("Digite a quantidade: ");
             estoqueService.SaidaEstoque(id, quantidade);
-            Console.WriteLine("Saída de estoque registrada com sucesso!");
         }
 
         private void SairDoSistema()
